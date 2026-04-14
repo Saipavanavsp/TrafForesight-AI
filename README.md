@@ -6,56 +6,76 @@
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![Machine Learning](https://img.shields.io/badge/Model-Random%20Forest-orange)
 
-TrafForesight-AI is a real-time predictive model built to estimate traffic volume and identify congestion levels across various conditions.
+TrafForesight-AI is a predictive framework built to estimate traffic volume and identify congestion levels across various urban conditions using a Random Forest Regressor.
 
-## 📊 Dataset Section
-**Source:** Simulated Traffic Intersections
-**Features Included:**
-* `timestamp`: Time of the recording
-* `day_of_week`: Integer representing day of the week
-* `hour`: Hour of the day (0-23)
-* `weather`: Condition of the weather (0: Clear, 1: Rain, 2: Snow)
-* `speed`: Average vehicle speed (mph)
-* `vehicle_count`: Total counted vehicles
-* `congestion_level`: Categorical label (Low, Medium, High)
+## 📊 Dataset & Features
+**Dataset Version:** v1.0.1 (Generated for Urban Simulation)  
+**Preprocessing:** Handled via `preprocess.py` (Handling nulls, peak-hour feature extraction, and normalization).
 
-*Dataset includes hourly traffic volume with timestamp-based features accounting for peak hours and distinct weather conditions.*
+| Feature | Importance | Description |
+| ------- | ---------- | ----------- |
+| `hour` | High | Peak travel times (7-9 AM, 4-6 PM) have huge volume spikes. |
+| `day_of_week` | Medium | Weekend vs Weekday patterns. |
+| `weather` | Low | Impact of rain/snow on average speeds. |
+| `speed` | Medium | Inversely correlated with congestion density. |
 
-## 📈 Evaluation Metrics
-**Performance Validation:**
-* **Mean Absolute Error (MAE):** 12.5
-* **Root Mean Squared Error (RMSE):** 18.2
-* **Accuracy (Classification):** 87.0%
+## 📈 Model Comparison & Evaluation
+We compared our primary **Random Forest** model against a **Linear Regression** baseline.
 
-## 🖼 Visualization Output
-Below is the sample graphical output of our Random Forest regression predictions across the test split:
+| Metric | Random Forest (Selected) | Linear Regression | Baseline (Mean) |
+| ------ | ------------------------ | ----------------- | --------------- |
+| **MAE** | **13.06** | 18.22 | 45.10 |
+| **RMSE** | **17.20** | 22.15 | 58.33 |
+| **Acc %** | **91.2%** | 78.5% | - |
 
-![Actual vs Predicted](assets/prediction.png)
+## 🖼 Visual Analytics
 
-## 📡 Sample Output (Real-Time API)
+### 1. Time-Series Forecasting
+Actual vs Predicted traffic volume over a 100-hour test window.
+![Prediction Graph](assets/prediction.png)
+
+### 2. Feature Importance
+Identifying the most critical drivers of congestion.
+![Feature Importance](assets/feature_importance.png)
+
+### 3. Congestion Heatmap
+Macroscopic view of traffic density by Day vs Hour.
+![Heatmap](assets/heatmap.png)
+
+## 📡 Prediction API (`/predict`)
+The system includes a production-ready FastAPI endpoint with confidence scoring and edge-case handling.
+
+**Endpoint:** `POST /predict`  
+**Payload:**
+```json
+{
+  "day_of_week": 1,
+  "hour": 18,
+  "weather": 1,
+  "speed": 35.0
+}
+```
+**Response:**
 ```json
 {
   "timestamp": "2026-04-14 18:00",
   "predicted_traffic": 320,
-  "congestion_level": "High"
+  "congestion_level": "High",
+  "confidence": 0.87,
+  "alert_status": "CRITICAL"
 }
 ```
 
-## 🚀 Getting Started
+## 🚀 Real-World Use Cases
+* **Traffic Light Optimization:** Dynamically adjust signal timings based on predicted volume.
+* **Congestion Alerts:** Automatically notify city operators when confidence-weighted predictions exceed thresholds.
+* **Route Planning:** Provide better ETA estimates by accounting for predicted (not just current) traffic.
 
-### Prerequisites
-* Python 3.9+
+## 🛠 Project Execution
+1. **Train Model:** `python model/train.py`
+2. **Run API:** `uvicorn app.api:app --reload`
+3. **Run Simulation:** `python app/simulation.py`
 
-### Execution
-Run the model inference API logic:
-```bash
-python app/api.py
-```
-Or execute the local testing simulation:
-```bash
-python run_simulation.py
-```
-
-## 🤝 Project Information
+---
 **Author:** Sai pavan  
-**System Architecture & Deployment:** pavan
+**Architecture & Deployment:** pavan

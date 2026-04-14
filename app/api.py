@@ -17,9 +17,15 @@ class TrafficRequest(BaseModel):
 @app.post("/predict")
 def get_prediction(req: TrafficRequest):
     result = predict_traffic(req.day_of_week, req.hour, req.weather, req.speed)
-    # Using hardcoded timestamp for example output conformity
+    
+    if "error" in result:
+        return result
+
     return {
         "timestamp": "2026-04-14 18:00",
         "predicted_traffic": result["predicted_traffic"],
-        "congestion_level": result["congestion_level"]
+        "congestion_level": result["congestion_level"],
+        "confidence": result["confidence"],
+        "alert_status": result["alert"]
     }
+
