@@ -1,0 +1,252 @@
+[
+  {
+    "timestamp": "2026-03-01 00:00:00",
+    "predicted_volume": 245,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-01 01:00:00",
+    "predicted_volume": 316,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-01 02:00:00",
+    "predicted_volume": 266,
+    "confidence": 0.85
+  },
+  {
+    "timestamp": "2026-03-01 03:00:00",
+    "predicted_volume": 262,
+    "confidence": 0.95
+  },
+  {
+    "timestamp": "2026-03-01 04:00:00",
+    "predicted_volume": 327,
+    "confidence": 0.92
+  },
+  {
+    "timestamp": "2026-03-01 05:00:00",
+    "predicted_volume": 195,
+    "confidence": 0.91
+  },
+  {
+    "timestamp": "2026-03-01 06:00:00",
+    "predicted_volume": 147,
+    "confidence": 0.86
+  },
+  {
+    "timestamp": "2026-03-01 07:00:00",
+    "predicted_volume": 320,
+    "confidence": 0.95
+  },
+  {
+    "timestamp": "2026-03-01 08:00:00",
+    "predicted_volume": 280,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-01 09:00:00",
+    "predicted_volume": 279,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-01 10:00:00",
+    "predicted_volume": 251,
+    "confidence": 0.92
+  },
+  {
+    "timestamp": "2026-03-01 11:00:00",
+    "predicted_volume": 270,
+    "confidence": 0.93
+  },
+  {
+    "timestamp": "2026-03-01 12:00:00",
+    "predicted_volume": 148,
+    "confidence": 0.93
+  },
+  {
+    "timestamp": "2026-03-01 13:00:00",
+    "predicted_volume": 97,
+    "confidence": 0.82
+  },
+  {
+    "timestamp": "2026-03-01 14:00:00",
+    "predicted_volume": 250,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-01 15:00:00",
+    "predicted_volume": 272,
+    "confidence": 0.95
+  },
+  {
+    "timestamp": "2026-03-01 16:00:00",
+    "predicted_volume": 237,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-01 17:00:00",
+    "predicted_volume": 232,
+    "confidence": 0.95
+  },
+  {
+    "timestamp": "2026-03-01 18:00:00",
+    "predicted_volume": 228,
+    "confidence": 0.93
+  },
+  {
+    "timestamp": "2026-03-01 19:00:00",
+    "predicted_volume": 86,
+    "confidence": 0.76
+  },
+  {
+    "timestamp": "2026-03-01 20:00:00",
+    "predicted_volume": 116,
+    "confidence": 0.88
+  },
+  {
+    "timestamp": "2026-03-01 21:00:00",
+    "predicted_volume": 278,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-01 22:00:00",
+    "predicted_volume": 250,
+    "confidence": 0.93
+  },
+  {
+    "timestamp": "2026-03-01 23:00:00",
+    "predicted_volume": 272,
+    "confidence": 0.93
+  },
+  {
+    "timestamp": "2026-03-02 00:00:00",
+    "predicted_volume": 290,
+    "confidence": 0.97
+  },
+  {
+    "timestamp": "2026-03-02 01:00:00",
+    "predicted_volume": 331,
+    "confidence": 0.93
+  },
+  {
+    "timestamp": "2026-03-02 02:00:00",
+    "predicted_volume": 172,
+    "confidence": 0.9
+  },
+  {
+    "timestamp": "2026-03-02 03:00:00",
+    "predicted_volume": 108,
+    "confidence": 0.8
+  },
+  {
+    "timestamp": "2026-03-02 04:00:00",
+    "predicted_volume": 282,
+    "confidence": 0.97
+  },
+  {
+    "timestamp": "2026-03-02 05:00:00",
+    "predicted_volume": 282,
+    "confidence": 0.95
+  },
+  {
+    "timestamp": "2026-03-02 06:00:00",
+    "predicted_volume": 326,
+    "confidence": 0.95
+  },
+  {
+    "timestamp": "2026-03-02 07:00:00",
+    "predicted_volume": 278,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-02 08:00:00",
+    "predicted_volume": 326,
+    "confidence": 0.91
+  },
+  {
+    "timestamp": "2026-03-02 09:00:00",
+    "predicted_volume": 134,
+    "confidence": 0.81
+  },
+  {
+    "timestamp": "2026-03-02 10:00:00",
+    "predicted_volume": 108,
+    "confidence": 0.84
+  },
+  {
+    "timestamp": "2026-03-02 11:00:00",
+    "predicted_volume": 248,
+    "confidence": 0.91
+  },
+  {
+    "timestamp": "2026-03-02 12:00:00",
+    "predicted_volume": 217,
+    "confidence": 0.92
+  },
+  {
+    "timestamp": "2026-03-02 13:00:00",
+    "predicted_volume": 242,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-02 14:00:00",
+    "predicted_volume": 284,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-02 15:00:00",
+    "predicted_volume": 203,
+    "confidence": 0.91
+  },
+  {
+    "timestamp": "2026-03-02 16:00:00",
+    "predicted_volume": 95,
+    "confidence": 0.83
+  },
+  {
+    "timestamp": "2026-03-02 17:00:00",
+    "predicted_volume": 41,
+    "confidence": 0.47
+  },
+  {
+    "timestamp": "2026-03-02 18:00:00",
+    "predicted_volume": 194,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-02 19:00:00",
+    "predicted_volume": 234,
+    "confidence": 0.95
+  },
+  {
+    "timestamp": "2026-03-02 20:00:00",
+    "predicted_volume": 278,
+    "confidence": 0.94
+  },
+  {
+    "timestamp": "2026-03-02 21:00:00",
+    "predicted_volume": 223,
+    "confidence": 0.96
+  },
+  {
+    "timestamp": "2026-03-02 22:00:00",
+    "predicted_volume": 237,
+    "confidence": 0.97
+  },
+  {
+    "timestamp": "2026-03-02 23:00:00",
+    "predicted_volume": 137,
+    "confidence": 0.93
+  },
+  {
+    "timestamp": "2026-03-03 00:00:00",
+    "predicted_volume": 126,
+    "confidence": 0.9
+  },
+  {
+    "timestamp": "2026-03-03 01:00:00",
+    "predicted_volume": 254,
+    "confidence": 0.92
+  }
+]

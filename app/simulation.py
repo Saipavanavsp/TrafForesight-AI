@@ -24,7 +24,7 @@ def run_simulation(steps=10):
         print(f"[{timestamp}] Sensor Input -> Hour: {hour}, Weather: {weather}, Speed: {speed:.1f} km/h")
         print(f"           Prediction -> Volume: {result['predicted_traffic']}, Congestion: {result['congestion_level']}, Confidence: {result['confidence']*100}%")
         
-        if result['alert_status'] == "CRITICAL":
+        if result['alert'] == "CRITICAL":
             print("           !!! ALERT: High Congestion Expected !!!")
             
         print("-" * 50)
