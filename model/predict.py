@@ -8,7 +8,7 @@ import sys
 # Ensure the model directory is in path for unpickling preprocess module
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-def predict_traffic(day_of_week: int, hour: int, weather: int, speed: float, simulation_mod=1.0):
+def predict_traffic(day_of_week: int, hour: int, weather: int, speed: float, simulation_mod=1.0, historical_baseline=250):
     """
     Enhanced Prediction Engine: 
     Supports 3D Globe, Multi-step Forecast, Anomaly Detection & Scenarios
@@ -53,11 +53,11 @@ def predict_traffic(day_of_week: int, hour: int, weather: int, speed: float, sim
     elif curr_pred > 150: status = "Medium"
     else: status = "Low"
 
-    # 4. Anomaly Detection (Mock Historical Baseline Comparison)
-    # Typically compares to median of day/hour. Here we simulate 380 as a "high" baseline.
-    historical_avg = 250 
-    is_anomaly = curr_pred > (historical_avg * 1.5)
-    anomaly_reason = "Unexpected volume spike detected" if is_anomaly else "None"
+    # 4. Anomaly Detection (Dynamic Baseline Comparison)
+    # Compares current prediction vs. historical median derived from CSV
+    historical_avg = historical_baseline 
+    is_anomaly = curr_pred > (historical_avg * 1.6)
+    anomaly_reason = f"Volume {int(((curr_pred/historical_avg)-1)*100)}% above baseline" if is_anomaly else "None"
 
     # 5. Peak Hour Detection
     is_peak = (8 <= hour <= 10) or (17 <= hour <= 20)

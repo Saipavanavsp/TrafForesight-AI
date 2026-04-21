@@ -48,11 +48,19 @@ async def evaluate_routes(
     except json.JSONDecodeError:
         return {"error": "Invalid routes_metadata JSON"}
 
-    # Determine simulation modifier (e.g., +30% traffic if active)
-    sim_mod = 1.3 if simulation_mode else 1.0
+    # Process CSV to derive dynamic baseline for anomaly detection
+    # This makes the system "Live" and tailored to the uploaded dataset
+    baseline_volume = 250 # Default
+    try:
+        content = await csv_file.read()
+        df_csv = pd.read_csv(io.BytesIO(content))
+        if 'vehicle_count' in df_csv.columns:
+            baseline_volume = float(df_csv['vehicle_count'].median())
+    except Exception as e:
+        print(f"CSV Parse Warning: {e}")
 
-    # Call the upgraded model
-    result = predict_traffic(day_of_week, hour, 0, 40.0, simulation_mod=sim_mod)
+    # Call the upgraded model with dynamic baseline
+    result = predict_traffic(day_of_week, hour, 0, 40.0, simulation_mod=sim_mod, historical_baseline=baseline_volume)
     ml_conf = result.get("confidence", 0.85)
     congestion = result.get("congestion_level", "Medium")
     
