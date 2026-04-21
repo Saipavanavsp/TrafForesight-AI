@@ -31,21 +31,21 @@ TrafForesight-AI is a next-generation urban mobility platform that combines **Ci
 - **Mapping Engine**: Google Maps JS SDK (Globe Mode) + Nominatim Search.
 - **UI/UX**: Glassmorphism CSS, Outfit Typography.
 
-## 🚀 Installation & Setup
+## 🚀 Deployment
 
-1. **Clone & Setup**:
-   ```powershell
-   git clone <repo-url>
-   pip install -r requirements.txt
-   ```
+### Local Deployment
+1. Install dependencies: `pip install -r requirements.txt`
+2. Run server: `uvicorn app.api:app --reload`
+3. Open: `http://127.0.0.1:8000`
 
-2. **Run Backend**:
-   ```powershell
-   uvicorn app.api:app --reload
-   ```
-
-3. **Access Dashboard**:
-   Open `http://127.0.0.1:8000/` in your browser.
+### Cloud Deployment (Render)
+1. **Push to GitHub**: Upload this project to a new repository on your GitHub.
+2. **Connect to Render**:
+   - Go to [Render.com](https://render.com) and sign in.
+   - Click **"New +"** -> **"Web Service"**.
+   - Connect your GitHub repository.
+   - Render will automatically detect the settings in `render.yaml` and deploy it.
+3. **Live**: Your dashboard will be live at `https://trafforesight-ai.onrender.com`.
 
 ## 📊 Analytics Dashboard
 | Feature | AI Impact | Description |
