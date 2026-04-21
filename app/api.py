@@ -84,7 +84,7 @@ async def evaluate_routes(
     return {
         "best_route_id": best_route_id,
         "adjusted_time": min_adjusted_time,
-        "distance": best_dist if 'best_dist' in locals() else best_distance,
+        "distance": best_distance,
         "congestion_level": congestion,
         "ml_confidence": ml_conf,
         "forecast": result.get("forecast"),

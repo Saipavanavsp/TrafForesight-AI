@@ -185,6 +185,12 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
     computeBtn.disabled = true;
 
     const directions = directionsRenderer.getDirections();
+    if (!directions) {
+        alert("Please wait for the route to appear on the map before computing.");
+        computeBtn.innerText = "Compute AI Best Route";
+        computeBtn.disabled = false;
+        return;
+    }
     const routeMeta = directions.routes.map((r, i) => ({ id: i, base_time: r.legs[0].duration.value, distance: r.legs[0].distance.value }));
 
     const formData = new FormData();
@@ -198,6 +204,13 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
     try {
         const resp = await fetch('/api/evaluate_routes', { method: 'POST', body: formData });
         const data = await resp.json();
+
+        if (data.error) {
+            alert("Analysis Error: " + data.error);
+            computeBtn.innerText = "Compute AI Best Route";
+            computeBtn.disabled = false;
+            return;
+        }
 
         // Reveal Panels
         document.getElementById('intelligence-panel').classList.remove('hidden');
@@ -231,7 +244,10 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
         const color = data.congestion_level === 'Critical' ? '#ef4444' : '#10b981';
         directionsRenderer.setOptions({ polylineOptions: { strokeColor: color, fontWeight: 8, strokeOpacity: 1.0 } });
 
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+        console.error(err); 
+        alert("Server Connectivity Error. Make sure the backend is running.");
+    }
     finally { computeBtn.innerText = "Compute AI Best Route"; computeBtn.disabled = false; }
 });
 
