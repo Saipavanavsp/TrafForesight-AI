@@ -220,6 +220,7 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
             alert("Analysis Error: " + data.error);
             computeBtn.innerText = "Compute AI Best Route";
             computeBtn.disabled = false;
+            computeBtn.classList.remove('loading');
             return;
         }
 
@@ -259,7 +260,11 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
         console.error(err); 
         alert("Server Connectivity Error. Make sure the backend is running.");
     }
-    finally { computeBtn.innerText = "Compute AI Best Route"; computeBtn.disabled = false; }
+    finally { 
+        computeBtn.innerText = "Compute AI Best Route"; 
+        computeBtn.disabled = false; 
+        computeBtn.classList.remove('loading');
+    }
 });
 
 document.getElementById('reset-map-btn').addEventListener('click', () => location.reload());
