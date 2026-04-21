@@ -32,3 +32,4 @@ fastapi
 uvicorn
 pydantic
 webbrowser
+python-multipart
