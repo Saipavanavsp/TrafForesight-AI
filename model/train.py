@@ -9,9 +9,10 @@ from preprocess import TrafficPreprocessor
 
 def train_model():
     # 1. Load Dataset
-    data_path = 'data/traffic.csv'
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_path = os.path.join(base_dir, 'data', 'traffic.csv')
     if not os.path.exists(data_path):
-        print("Data file not found at data/traffic.csv")
+        print(f"Data file not found at {data_path}")
         return
 
     df = pd.read_csv(data_path)
@@ -51,10 +52,11 @@ def train_model():
     print("="*30)
 
     # 7. Save Artifacts
-    os.makedirs('model', exist_ok=True)
-    with open('model/rf_model.pkl', 'wb') as f:
+    model_dir = os.path.dirname(os.path.abspath(__file__))
+    os.makedirs(model_dir, exist_ok=True)
+    with open(os.path.join(model_dir, 'rf_model.pkl'), 'wb') as f:
         pickle.dump(model, f)
-    with open('model/preprocessor.pkl', 'wb') as f:
+    with open(os.path.join(model_dir, 'preprocessor.pkl'), 'wb') as f:
         pickle.dump(preprocessor, f)
     
     print("\nSaved artifacts to model/ directory.")

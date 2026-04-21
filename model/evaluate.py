@@ -33,8 +33,10 @@ def generate_evaluation_report():
     plt.legend()
     
     # Save graph to assets
-    os.makedirs('assets', exist_ok=True)
-    graph_path = 'assets/actual_vs_predicted.png'
+    model_dir = os.path.dirname(os.path.abspath(__file__))
+    assets_dir = os.path.join(os.path.dirname(model_dir), 'assets')
+    os.makedirs(assets_dir, exist_ok=True)
+    graph_path = os.path.join(assets_dir, 'actual_vs_predicted.png')
     plt.savefig(graph_path, dpi=300, bbox_inches='tight')
     plt.close()
     
@@ -49,7 +51,8 @@ def generate_evaluation_report():
 - **R² Score:** {r2:.2f}
     """
     
-    with open('model/eval_report.md', 'w') as f:
+    report_path = os.path.join(model_dir, 'eval_report.md')
+    with open(report_path, 'w') as f:
         f.write(report)
     
     return report

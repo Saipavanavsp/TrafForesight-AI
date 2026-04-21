@@ -13,8 +13,9 @@ def predict_traffic(day_of_week: int, hour: int, weather: int, speed: float, sim
     Enhanced Prediction Engine: 
     Supports 3D Globe, Multi-step Forecast, Anomaly Detection & Scenarios
     """
-    model_path = 'model/rf_model.pkl'
-    preprocessor_path = 'model/preprocessor.pkl'
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(base_path, 'rf_model.pkl')
+    preprocessor_path = os.path.join(base_path, 'preprocessor.pkl')
     
     if not os.path.exists(model_path) or not os.path.exists(preprocessor_path):
         return {"error": "Model files missing."}
