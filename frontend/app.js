@@ -231,8 +231,8 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
             anomalyAlert.classList.add('hidden');
         }
 
-        // Update Chart
-        updateChart(data.forecast["t+1h"] - 20, data.forecast["t+1h"], data.forecast["t+3h"], data.forecast["t+6h"], simulationMode);
+        // Update Chart with real Current prediction vs Future forecast
+        updateChart(data.predicted_traffic_volume, data.forecast["t+1h"], data.forecast["t+3h"], data.forecast["t+6h"], simulationMode);
 
         // Update Route Summary
         document.getElementById('out-from').innerText = directions.routes[0].legs[0].start_address;
@@ -252,4 +252,4 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
 });
 
 document.getElementById('reset-map-btn').addEventListener('click', () => location.reload());
-window.onload = initMap;
+// initMap is managed by Google Maps script callback

@@ -86,6 +86,7 @@ async def evaluate_routes(
         "adjusted_time": min_adjusted_time,
         "distance": best_distance,
         "congestion_level": congestion,
+        "predicted_traffic_volume": result.get("predicted_traffic"),
         "ml_confidence": ml_conf,
         "forecast": result.get("forecast"),
         "anomaly": result.get("anomaly"),
