@@ -69,6 +69,38 @@ The system achieves a significant performance boost over baseline heuristics:
 
 ---
 
+## 🚀 Deployment & Installation
+
+### 1. Local Development
+To run the intelligence dashboard on your local machine:
+1.  **Install Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+2.  **Launch the Server**:
+    ```bash
+    uvicorn app.api:app --reload
+    ```
+3.  **Access the Dashboard**: Open your browser and navigate to:
+    **[http://127.0.0.1:8000/](http://127.0.0.1:8000/)**
+
+### 2. Cloud Deployment (Render.com)
+This project is pre-configured for one-click deployment to **Render**:
+- **Runtime**: Python 3.10+
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `uvicorn app.api:app --host 0.0.0.0 --port $PORT`
+- **Config**: Automatically uses the provided `render.yaml` and `Procfile`.
+
+---
+
+## 🕹️ Live Dashboard Guide
+1.  **Drop Pins**: Click the "Drop Pins" button to place your **Start (Red)** and **Destination (Green)** markers on the 3D globe.
+2.  **Upload Data**: Select a `.csv` file (like the one in `/data`) to establish the traffic baseline.
+3.  **Run Intelligence**: Click "Compute AI Best Route" to see the multi-step forecast and optimized path.
+4.  **Simulate Stress**: Toggle **Simulation Mode** to see how the AI handles a +30% traffic spike.
+
+---
+
 ## 📂 Folder Structure
 ```text
 TrafForesight-AI/
