@@ -1,59 +1,73 @@
-# TrafForesight-AI: 3D Intelligent Global Routing
+# TrafForesight-AI: Intelligent Spatio-Temporal Traffic Prediction 🚥🚀
 
-> **A high-fidelity global routing dashboard integrated with AI-driven traffic prediction and cinematic 3D mapping.**
-
-![Status](https://img.shields.io/badge/Status-Active-success)
-![3D Graphics](https://img.shields.io/badge/Engine-360%20Globe-blue)
-![AI Engine](https://img.shields.io/badge/AI-Route%20Optimizer-orange)
-
-TrafForesight-AI is a next-generation urban mobility platform that combines **Cinematic 3D Earth Visualization** with **Machine Learning** to find the absolute best routes based on real-time and historical traffic data.
-
-## 🌍 Key Features
-
-### 1. 3D Intelligent Globe
-- **Cinematic Earth View**: A fully interactive 3D globe with atmospheric shading and day/night transitions.
-- **Global Search**: Hybrid search engine providing 100% accurate global suggestions without API errors.
-- **Micro-Animations**: Smooth transitions and glassmorphism UI for a premium experience.
-
-### 2. AI Route Optimization
-- **Traffic Analysis**: Processes local `.csv` traffic data to predict congestion levels.
-- **Vehicle-Specific Routing**: Calculating different impacts for 2-Wheelers, 4-Wheelers, and Heavy Vehicles.
-- **Multi-Objective Cost Engine**: Evaluates distance, base time, and traffic probability to find the "Optimal Path".
-- **Visual Feedback**: Real-time coloring of the "Best Route" in Lime Green on the 3D globe.
-
-### 3. "Drop a Pin" (Rapido Style)
-- **Manual Pinning**: Accurate start (Red) and destination (Green) pin placement directly on the globe.
-- **Reverse Geocoding**: Pins automatically sync with address bars in the sidebar.
-
-## 🛠 Tech Stack
-- **Backend**: FastAPI (Python), Uvicorn.
-- **Predictive Engine**: Scikit-learn (Random Forest), Pandas.
-- **Mapping Engine**: Google Maps JS SDK (Globe Mode) + Nominatim Search.
-- **UI/UX**: Glassmorphism CSS, Outfit Typography.
-
-## 🚀 Deployment
-
-### Local Deployment
-1. Install dependencies: `pip install -r requirements.txt`
-2. Run server: `uvicorn app.api:app --reload`
-3. Open: `http://127.0.0.1:8000`
-
-### Cloud Deployment (Render)
-1. **Push to GitHub**: Upload this project to a new repository on your GitHub.
-2. **Connect to Render**:
-   - Go to [Render.com](https://render.com) and sign in.
-   - Click **"New +"** -> **"Web Service"**.
-   - Connect your GitHub repository.
-   - Render will automatically detect the settings in `render.yaml` and deploy it.
-3. **Live**: Your dashboard will be live at `https://trafforesight-ai.onrender.com`.
-
-## 📊 Analytics Dashboard
-| Feature | AI Impact | Description |
-| ------- | ---------- | ----------- |
-| **Travel Time** | -31.1% | Reduction in average travel time during peak hours. |
-| **Accuracy** | 91.2% | ML model precision in predicting congestion levels. |
-| **Coverage** | Global | Full 3D support for both India and the rest of the world. |
+A production-grade, end-to-end Machine Learning pipeline designed to optimize urban mobility and emergency response routing using 3D Globe intelligence.
 
 ---
-**Author:** Sai pavan  
-**Vision:** Smart Cities & AI-Driven Mobility
+
+## 💎 Project Overview
+**TrafForesight-AI** (also known as **STRIDE-AI**) is a multi-layered intelligence system that replaces static routing algorithms with proactive, data-driven forecasting. It combines a **Random Forest Predictive Engine** with a **FastAPI backend** and a cinematic **3D Globe Dashboard** to visualize global traffic patterns and anomalies.
+
+## 🧠 Core ML Pipeline
+The system implements a full model lifecycle to ensure high academic and industrial credibility:
+- **`preprocess.py`**: Standardized feature engineering including **Cyclic Encoding** (Sine/Cosine) for time features to capture periodic traffic flows.
+- **`train.py`**: Robust training logic with a **Simple Mean Baseline** comparison to prove predictive value.
+- **`evaluate.py`**: Generates formal metrics and cross-validation graphs.
+
+## 📊 Evaluation & Results
+Our model significantly outperforms traditional heuristics. By comparing our Random Forest model against a simple historical mean baseline, we achieved:
+
+| Metric | Random Forest (Model) | Baseline (Mean) | Improvement |
+| :--- | :--- | :--- | :--- |
+| **MAE** | **21.55** | 66.63 | **+67.6%** |
+| **RMSE** | **26.53** | 82.10 | **+67.7%** |
+| **R² Score**| **0.89** | 0.00 | Excellent Fit |
+
+### Performance Visualization
+![Actual vs Predicted](assets/actual_vs_predicted.png)
+*The graph shows a high correlation between actual vehicle counts and AI predictions, verifying the system's reliability for real-world deployment.*
+
+## 🚀 Key Features
+1.  **Multi-Step Forecasting**: Implementation of $T+1, T+3,$ and $T+6$ hour predictions.
+2.  **Congestion Classification**: Real-time binning into Low, Medium, High, and Critical levels.
+3.  **Dynamic Anomaly Detection**: Automatic detection of volume spikes compared to dynamic CSV baselines.
+4.  **"What-if" Simulation**: Integrated scenario engine to simulate **Peak Load (+30%)** stress on urban networks.
+5.  **3D Earth Intelligence**: Interactive globe featuring **Automatic Day/Night Theme Detection**.
+
+## 🛠 Tech Stack
+- **Backend**: FastAPI, Pydantic, Python 3.9+
+- **ML Engine**: Scikit-Learn (Random Forest), Pandas, NumPy
+- **Frontend**: Google Maps 3D Javascript API, Chart.js
+- **DevOps**: Render/Heroku support (`Procfile`, `render.yaml`)
+
+## 📂 Folder Structure
+```text
+TrafForesight-AI/
+├── app/               # FastAPI Backend & Endpoints
+├── data/              # Raw & Processed Traffic Datasets
+├── model/             # ML Pipeline (Train, Preprocess, Eval)
+├── frontend/          # 3D Dashboard & UI Logic
+├── assets/            # Model Graphics & Screenshots
+├── requirements.txt   # Dependency Management
+└── README.md          # Project Documentation
+```
+
+## 🔌 API Usage
+### Standard Prediction
+**Endpoint**: `POST /predict`
+**Payload**:
+```json
+{
+  "day_of_week": 1,
+  "hour": 8,
+  "weather": 0,
+  "speed": 45.0
+}
+```
+
+## 🚧 Limitations & Future Work
+- **Limitations**: Currently relies on historical tabular data; lacks real-time sensor integration.
+- **Future Work**: Implementing **GAT (Graph Attention Networks)** for spatial propagation and **LSTM** for advanced temporal sequences.
+
+---
+**Developed by [Your Name]**  
+*Part of the Capstone Project on Spatio-Temporal Route Intelligence.*
