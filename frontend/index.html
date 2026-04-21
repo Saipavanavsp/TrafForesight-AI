@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrafForesight-AI Routing</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-sSAUpdWKDUxeb5_m5lEcvp7RswMokfQ&libraries=places,marker&callback=initMap" async defer></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Control Panel -->
+        <aside id="sidebar" class="glass-panel">
+            <header>
+                <h1>TrafForesight-AI</h1>
+                <p>3D Intelligent Global Routing</p>
+            </header>
+            
+            <form id="routing-form">
+                <div class="form-group" id="start-group">
+                    <label for="start">Starting Location</label>
+                    <input type="text" id="start" placeholder="Search global start (or drop pin)" required>
+                </div>
+                
+                <div class="form-group" id="dest-group">
+                    <label for="destination">Destination Space</label>
+                    <input type="text" id="destination" placeholder="Search global destination" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="vehicle_type">Vehicle Type</label>
+                    <select id="vehicle_type" required>
+                        <option value="2-wheeler">2-Wheeler (Fast in traffic)</option>
+                        <option value="4-wheeler" selected>4-Wheeler (Standard)</option>
+                        <option value="heavy">Truck / Heavy Vehicle (Slow)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="csv_upload">Traffic Data (.csv)</label>
+                    <input type="file" id="csv_upload" accept=".csv" required>
+                </div>
+
+                <button type="submit" id="find-route-btn" class="primary-btn">Compute AI Best Route</button>
+            </form>
+            
+            <!-- Output Metrics Box -->
+            <div id="output-box" class="hidden">
+                <h2>AI Route Analysis</h2>
+                <div class="metric"><span class="label">From:</span> <span id="out-from">-</span></div>
+                <div class="metric"><span class="label">To:</span> <span id="out-to">-</span></div>
+                <div class="metric"><span class="label">Distance:</span> <span id="out-distance">-</span></div>
+                <div class="metric"><span class="label">Est. Time:</span> <span id="out-time">-</span></div>
+                <div class="metric"><span class="label">Condition:</span> <span id="out-weather">-</span></div>
+                <div class="metric"><span class="label">Vehicle:</span> <span id="out-vehicle">-</span></div>
+                <p class="status-msg" id="out-status">Processing worldwide data...</p>
+            </div>
+        </aside>
+
+        <!-- Map Container -->
+        <main id="map-area">
+            <div id="map"></div>
+            <div id="map-controls">
+                <div id="pin-tool-container">
+                    <button id="drop-pin-btn" class="glass-btn primary">📍 Drop a Pin</button>
+                    <div id="pin-sub-controls" class="hidden">
+                        <button id="pin-start-btn" class="glass-btn start-pin">🔴 Start Pin</button>
+                        <button id="pin-dest-btn" class="glass-btn dest-pin">🟢 Destination Pin</button>
+                    </div>
+                </div>
+                <button id="reset-map-btn" class="glass-btn">Reset 3D Earth</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
