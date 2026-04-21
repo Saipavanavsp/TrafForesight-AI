@@ -1,89 +1,71 @@
+/**
+ * TrafForesight-AI: Intelligent Dashboard & 3D Globe
+ * Features: Intelligence Engine, Simulation Scenarios, Charting
+ */
+
 let map;
 let directionsService;
 let directionsRenderer;
-let startAutocomplete;
-let destAutocomplete;
 let startMarker;
 let destMarker;
 let pinMode = 'none';
+let predictionChart;
 
 const startIconUrl = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
 const destIconUrl = 'https://maps.google.com/mapfiles/ms/icons/green-dot.png';
 
-// Global error handler for Google Maps
+// Authentication Failure Handler
 window.gm_authFailure = function() {
-    alert("Google Maps Authentication Failed!\n\nPossible reasons:\n1. Billing is not enabled in Google Cloud Console.\n2. The API Key is restricted.\n3. Places/Directions APIs are not enabled.");
+    alert("Google Maps Auth Failed. Check Billing/API Key.");
 };
 
-function initMap() {
-    try {
-        // Initialize Map with Globe Projection
-        map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: 20.5937, lng: 78.9629 }, // India
-            zoom: 4,
-            mapId: "DEMO_MAP_ID",
-            tilt: 0,
-            heading: 0,
-        });
+async function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 20.5937, lng: 78.9629 }, 
+        zoom: 4,
+        mapId: "DEMO_MAP_ID",
+        tilt: 0,
+        heading: 0,
+    });
 
-        directionsService = new google.maps.DirectionsService();
-        directionsRenderer = new google.maps.DirectionsRenderer({
-            map: map,
-            suppressMarkers: true,
-            polylineOptions: {
-                strokeColor: "#f59e0b",
-                strokeOpacity: 0.7,
-                strokeWeight: 6
-            }
-        });
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+        map: map,
+        suppressMarkers: true,
+        polylineOptions: { strokeColor: "#f59e0b", strokeOpacity: 0.7, strokeWeight: 6 }
+    });
 
-        // --- Autocomplete Setup (Hybrid Fix) ---
-        setupAutocomplete('start');
-        setupAutocomplete('destination');
+    setupAutocomplete('start');
+    setupAutocomplete('destination');
+    setupPinningUI();
 
-        // --- Pinning UI ---
-        setupPinningUI();
-
-        // --- Map Click ---
-        map.addListener("click", (e) => {
-            handleMapClick(e.latLng);
-        });
-
-        console.log("3D Google Globe Active.");
-    } catch (err) {
-        console.error("Map initialization failed:", err);
-    }
+    map.addListener("click", (e) => handleMapClick(e.latLng));
+    
+    // Initialize empty chart
+    initChart();
 }
 
-// --- Hybrid Autocomplete Implementation (Fixes Google "Oops" Error) ---
-
+/** 1. HYBRID SEARCH ENGINE (Fixes Google Auth/Billing Errors) **/
 function setupAutocomplete(inputId) {
     const input = document.getElementById(inputId);
     let suggestionBox = null;
 
     input.addEventListener('input', async (e) => {
         const query = e.target.value;
-        if (query.length < 3) {
-            clearSuggestions();
-            return;
-        }
+        if (query.length < 3) { clearSuggestions(); return; }
 
-        // Use free global suggestions to avoid Google Billing/API errors
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`;
         try {
             const resp = await fetch(url);
             const data = await resp.json();
             showSuggestions(data, input);
-        } catch (err) {
-            console.error("Suggestion fetch error:", err);
-        }
+        } catch (err) { console.error("Search error:", err); }
     });
 
     function showSuggestions(data, targetInput) {
         clearSuggestions();
         suggestionBox = document.createElement('div');
         suggestionBox.className = 'suggestions-list';
-        
         data.forEach(item => {
             const div = document.createElement('div');
             div.className = 'suggestion-item';
@@ -91,7 +73,6 @@ function setupAutocomplete(inputId) {
             div.addEventListener('click', () => {
                 targetInput.value = item.display_name;
                 const latlng = new google.maps.LatLng(item.lat, item.lon);
-                
                 setMarker(latlng, targetInput.id === 'start' ? 'start' : 'end');
                 map.setCenter(latlng);
                 map.setZoom(12);
@@ -99,24 +80,48 @@ function setupAutocomplete(inputId) {
             });
             suggestionBox.appendChild(div);
         });
-        
         targetInput.parentNode.appendChild(suggestionBox);
     }
+    const clearSuggestions = () => { if (suggestionBox) { suggestionBox.remove(); suggestionBox = null; } };
+    document.addEventListener('click', (e) => { if (suggestionBox && !input.contains(e.target)) clearSuggestions(); });
+}
 
-    function clearSuggestions() {
-        if (suggestionBox) {
-            suggestionBox.remove();
-            suggestionBox = null;
-        }
-    }
-
-    document.addEventListener('click', (e) => {
-        if (suggestionBox && !input.contains(e.target) && !suggestionBox.contains(e.target)) {
-            clearSuggestions();
+/** 2. INTELLIGENT CHARTING **/
+function initChart() {
+    const ctx = document.getElementById('prediction-chart').getContext('2d');
+    predictionChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Current', '+1h', '+3h', '+6h'],
+            datasets: [{
+                label: 'Predicted Volume',
+                data: [0, 0, 0, 0],
+                borderColor: '#60a5fa',
+                backgroundColor: 'rgba(96, 165, 250, 0.2)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Simulated Data',
+                data: [0, 0, 0, 0],
+                borderColor: '#f59e0b',
+                borderDash: [5, 5],
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' } } }
         }
     });
 }
 
+function updateChart(curr, f1, f3, f6, isSim) {
+    const data = [curr, f1, f3, f6];
+    predictionChart.data.datasets[isSim ? 1 : 0].data = data;
+    predictionChart.update();
+}
+
+/** 3. PIINNING & ROUTING **/
 function setupPinningUI() {
     const dropPinBtn = document.getElementById('drop-pin-btn');
     const pinSubControls = document.getElementById('pin-sub-controls');
@@ -128,112 +133,65 @@ function setupPinningUI() {
         dropPinBtn.classList.toggle('active');
     });
 
-    pinStartBtn.addEventListener('click', () => {
-        pinMode = (pinMode === 'start') ? 'none' : 'start';
-        toggleBtn(pinStartBtn, pinMode === 'start');
-        toggleBtn(pinDestBtn, false);
-    });
-
-    pinDestBtn.addEventListener('click', () => {
-        pinMode = (pinMode === 'end') ? 'none' : 'end';
-        toggleBtn(pinDestBtn, pinMode === 'end');
-        toggleBtn(pinStartBtn, false);
-    });
+    pinStartBtn.addEventListener('click', () => { pinMode = 'start'; setActive(pinStartBtn, pinDestBtn); });
+    pinDestBtn.addEventListener('click', () => { pinMode = 'end'; setActive(pinDestBtn, pinStartBtn); });
 }
 
-function toggleBtn(btn, active) {
-    if (active) btn.classList.add('active');
-    else btn.classList.remove('active');
-}
+function setActive(a, i) { a.classList.add('active'); i.classList.remove('active'); }
 
 async function handleMapClick(latLng) {
     if (pinMode === 'none') return;
-
-    if (pinMode === 'start') {
-        setMarker(latLng, 'start');
-        await reverseGeocode(latLng, 'start');
-    } else if (pinMode === 'end') {
-        setMarker(latLng, 'end');
-        await reverseGeocode(latLng, 'destination');
-    }
-
+    setMarker(latLng, pinMode === 'start' ? 'start' : 'end');
+    await reverseGeocode(latLng, pinMode === 'start' ? 'start' : 'destination');
     pinMode = 'none';
-    const pinStartBtn = document.getElementById('pin-start-btn');
-    const pinDestBtn = document.getElementById('pin-dest-btn');
-    toggleBtn(pinStartBtn, false);
-    toggleBtn(pinDestBtn, false);
-    
+    document.querySelectorAll('.glass-btn').forEach(b => b.classList.remove('active'));
     if (startMarker && destMarker) calculateStaticRoute();
 }
 
 function setMarker(latLng, type) {
     if (type === 'start') {
         if (startMarker) startMarker.setMap(null);
-        startMarker = new google.maps.Marker({ position: latLng, map: map, draggable: true, icon: startIconUrl });
-        startMarker.addListener('dragend', () => { 
-            reverseGeocode(startMarker.getPosition(), 'start'); 
-            calculateStaticRoute();
-        });
+        startMarker = new google.maps.Marker({ position: latLng, map: map, draggable: true, icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png' });
     } else {
         if (destMarker) destMarker.setMap(null);
-        destMarker = new google.maps.Marker({ position: latLng, map: map, draggable: true, icon: destIconUrl });
-        destMarker.addListener('dragend', () => { 
-            reverseGeocode(destMarker.getPosition(), 'destination'); 
-            calculateStaticRoute();
-        });
+        destMarker = new google.maps.Marker({ position: latLng, map: map, draggable: true, icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png' });
     }
 }
 
 async function reverseGeocode(latLng, inputId) {
-    const geocoder = new google.maps.Geocoder();
     const input = document.getElementById(inputId);
     input.value = "Locating...";
-    geocoder.geocode({ location: latLng }, (results, status) => {
-        if (status === "OK" && results[0]) input.value = results[0].formatted_address;
-        else input.value = `${latLng.lat().toFixed(5)}, ${latLng.lng().toFixed(5)}`;
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: latLng }, (res, status) => {
+        if (status === "OK") input.value = res[0].formatted_address;
     });
 }
 
 function calculateStaticRoute() {
-    if (!startMarker || !destMarker) return;
-    directionsService.route({
-        origin: startMarker.getPosition(),
-        destination: destMarker.getPosition(),
-        travelMode: google.maps.TravelMode.DRIVING
-    }, (response, status) => {
-        if (status === "OK") directionsRenderer.setDirections(response);
-    });
+    directionsService.route({ origin: startMarker.getPosition(), destination: destMarker.getPosition(), travelMode: 'DRIVING' }, 
+    (res, status) => { if (status === "OK") directionsRenderer.setDirections(res); });
 }
 
-// AI Analysis Submission
+/** 4. INTELLIGENCE ENGINE SUBMISSION **/
 document.getElementById('routing-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const csvFile = document.getElementById('csv_upload').files[0];
-    const vehicleType = document.getElementById('vehicle_type').value;
-
-    if (!csvFile || !startMarker || !destMarker) {
-        alert("Please select points and upload traffic data.");
-        return;
-    }
+    const simulationMode = document.getElementById('sim-mode').checked;
+    
+    if (!csvFile || !startMarker || !destMarker) { alert("Pins & CSV required."); return; }
 
     const computeBtn = document.getElementById('find-route-btn');
-    computeBtn.innerText = "Analyzing 3D Globe Traffic...";
+    computeBtn.innerText = "🚥 Intelligence Engine Active...";
     computeBtn.disabled = true;
 
     const directions = directionsRenderer.getDirections();
-    if (!directions) { alert("Calculate route first."); computeBtn.disabled = false; return; }
-
-    const route = directions.routes[0].legs[0];
-    const routesMetadata = directions.routes.map((r, i) => ({
-        id: i,
-        distance: r.legs[0].distance.value,
-        base_time: r.legs[0].duration.value
-    }));
+    const routeMeta = directions.routes.map((r, i) => ({ id: i, base_time: r.legs[0].duration.value, distance: r.legs[0].distance.value }));
 
     const formData = new FormData();
     formData.append("csv_file", csvFile);
-    formData.append("routes_metadata", JSON.stringify(routesMetadata));
-    formData.append("vehicle_type", vehicleType);
+    formData.append("routes_metadata", JSON.stringify(routeMeta));
+    formData.append("vehicle_type", document.getElementById('vehicle_type').value);
+    formData.append("simulation_mode", simulationMode);
     formData.append("day_of_week", new Date().getDay());
     formData.append("hour", new Date().getHours());
 
@@ -241,19 +199,41 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
         const resp = await fetch('/api/evaluate_routes', { method: 'POST', body: formData });
         const data = await resp.json();
 
+        // Reveal Panels
+        document.getElementById('intelligence-panel').classList.remove('hidden');
         document.getElementById('output-box').classList.remove('hidden');
-        document.getElementById('out-from').innerText = route.start_address;
-        document.getElementById('out-to').innerText = route.end_address;
-        document.getElementById('out-distance').innerText = route.distance.text;
-        document.getElementById('out-time').innerText = `${Math.round(data.adjusted_time / 60)} mins (AI Optimized)`;
-        document.getElementById('out-weather').innerText = data.weather_condition;
-        document.getElementById('out-vehicle').innerText = vehicleType.toUpperCase();
-        document.getElementById('out-status').innerText = `Best Route Colored GREEN. Confidence: ${(data.ml_confidence * 100).toFixed(1)}%`;
 
-        directionsRenderer.setOptions({ polylineOptions: { strokeColor: "#10b981", strokeOpacity: 1.0, strokeWeight: 8 } });
+        // Update Intelligence Metrics
+        document.getElementById('f-1h').innerText = data.forecast["t+1h"];
+        document.getElementById('f-3h').innerText = data.forecast["t+3h"];
+        document.getElementById('f-6h').innerText = data.forecast["t+6h"];
+        document.getElementById('out-peak').innerText = `${data.peak_window} (${data.is_peak ? 'BUSY' : 'CALM'})`;
         
+        // Handle Anomalies
+        const anomalyAlert = document.getElementById('anomaly-alert');
+        if (data.anomaly.is_detected) {
+            anomalyAlert.classList.remove('hidden');
+            anomalyAlert.innerText = `⚠️ ANOMALY: ${data.anomaly.reason}`;
+        } else {
+            anomalyAlert.classList.add('hidden');
+        }
+
+        // Update Chart
+        updateChart(data.forecast["t+1h"] - 20, data.forecast["t+1h"], data.forecast["t+3h"], data.forecast["t+6h"], simulationMode);
+
+        // Update Route Summary
+        document.getElementById('out-from').innerText = directions.routes[0].legs[0].start_address;
+        document.getElementById('out-to').innerText = directions.routes[0].legs[0].end_address;
+        document.getElementById('out-time').innerText = `${Math.round(data.adjusted_time / 60)} mins (AI Weighted)`;
+        document.getElementById('out-status').innerText = `Best Route Highlighed. Level: ${data.congestion_level}`;
+
+        // Change Map Color
+        const color = data.congestion_level === 'Critical' ? '#ef4444' : '#10b981';
+        directionsRenderer.setOptions({ polylineOptions: { strokeColor: color, fontWeight: 8, strokeOpacity: 1.0 } });
+
     } catch (err) { console.error(err); }
     finally { computeBtn.innerText = "Compute AI Best Route"; computeBtn.disabled = false; }
 });
 
-document.getElementById('reset-map-btn').addEventListener('click', () => { location.reload(); });
+document.getElementById('reset-map-btn').addEventListener('click', () => location.reload());
+window.onload = initMap;

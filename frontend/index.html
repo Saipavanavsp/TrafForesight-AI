@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrafForesight-AI Routing</title>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for Prediction Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-sSAUpdWKDUxeb5_m5lEcvp7RswMokfQ&libraries=places,marker&callback=initMap" async defer></script>
-
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -47,12 +44,37 @@
                     <input type="file" id="csv_upload" accept=".csv" required>
                 </div>
 
+                <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="sim-mode" style="width: 20px; height: 20px;">
+                    <label for="sim-mode" style="text-transform: none; font-size: 1rem; color: #f59e0b;">🔥 Simulate Peak Load (+30%)</label>
+                </div>
+
                 <button type="submit" id="find-route-btn" class="primary-btn">Compute AI Best Route</button>
             </form>
             
+            <!-- Intelligence Panel -->
+            <div id="intelligence-panel" class="hidden">
+                 <div id="anomaly-alert" class="alert-banner hidden">⚠️ ANOMALY DETECTED: UNEXPECTED VOLUME</div>
+                 
+                 <div class="intel-widget">
+                    <h3>Future Traffic Forecast</h3>
+                    <div class="forecast-grid">
+                        <div class="f-item"><span class="f-label">Next 1h</span><span id="f-1h" class="f-val">-</span></div>
+                        <div class="f-item"><span class="f-label">Next 3h</span><span id="f-3h" class="f-val">-</span></div>
+                        <div class="f-item"><span class="f-label">Next 6h</span><span id="f-6h" class="f-val">-</span></div>
+                    </div>
+                 </div>
+
+                 <div class="intel-widget">
+                    <h3>Prediction Accuracy</h3>
+                    <canvas id="prediction-chart"></canvas>
+                 </div>
+            </div>
+
             <!-- Output Metrics Box -->
             <div id="output-box" class="hidden">
                 <h2>AI Route Analysis</h2>
+                <div class="metric"><span class="label">Status:</span> <span id="out-peak" style="color: #f59e0b;">-</span></div>
                 <div class="metric"><span class="label">From:</span> <span id="out-from">-</span></div>
                 <div class="metric"><span class="label">To:</span> <span id="out-to">-</span></div>
                 <div class="metric"><span class="label">Distance:</span> <span id="out-distance">-</span></div>

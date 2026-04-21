@@ -343,3 +343,69 @@ input[type="file"] {
     z-index: 999 !important;
     stroke-opacity: 1.0 !important;
 }
+/* Intelligence Widgets */
+.intel-widget {
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.intel-widget h3 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.f-item {
+    background: rgba(255,255,255,0.03);
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.f-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.f-val {
+    font-weight: 700;
+    color: var(--accent-yellow);
+}
+
+.alert-banner {
+    background: #ef4444;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+    animation: flash 1s infinite;
+}
+
+@keyframes flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+#prediction-chart {
+    max-height: 180px;
+}
+
+.hidden {
+    display: none !important;
+}
