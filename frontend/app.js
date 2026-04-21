@@ -1,6 +1,6 @@
 /**
  * TrafForesight-AI: Intelligent Dashboard & 3D Globe
- * Features: Intelligence Engine, Simulation Scenarios, Charting
+ * Features: Intelligence Engine, Simulation Scenarios, Charting, Dynamic Day/Night
  */
 
 let map;
@@ -20,12 +20,21 @@ window.gm_authFailure = function() {
 };
 
 async function initMap() {
+    // Determine initial theme based on local time
+    const hour = new Date().getHours();
+    const isNight = hour >= 19 || hour < 6;
+
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 20.5937, lng: 78.9629 }, 
-        zoom: 4,
-        mapId: "DEMO_MAP_ID",
+        zoom: 3, // Start with Globe View
+        mapId: isNight ? "cc66b4478f657a70" : "DEMO_MAP_ID", // Night style if dark
         tilt: 0,
         heading: 0,
+        minZoom: 2,
+        restriction: {
+            latLngBounds: {north: 85, south: -85, west: -180, east: 180},
+            strictBounds: false
+        }
     });
 
     directionsService = new google.maps.DirectionsService();
@@ -41,17 +50,16 @@ async function initMap() {
 
     map.addListener("click", (e) => handleMapClick(e.latLng));
     
-    // Initialize empty chart
     initChart();
 
-    // Cinematic Intro: Zoom in from Global view to India
+    // Cinematic Intro: Zoom from Globe to India
     setTimeout(() => {
+        map.panTo({ lat: 20.5937, lng: 78.9629 });
         map.setZoom(5);
-        map.setCenter({ lat: 20.5937, lng: 78.9629 });
-    }, 1000);
+    }, 1500);
 }
 
-/** 1. HYBRID SEARCH ENGINE (Fixes Google Auth/Billing Errors) **/
+/** 1. HYBRID SEARCH ENGINE **/
 function setupAutocomplete(inputId) {
     const input = document.getElementById(inputId);
     let suggestionBox = null;
@@ -123,7 +131,6 @@ function initChart() {
 
 function updateChart(curr, f1, f3, f6, isSim) {
     const data = [curr, f1, f3, f6];
-    // If not simulating, clear the simulation dataset to avoid confusion
     if (!isSim) {
         predictionChart.data.datasets[1].data = [0, 0, 0, 0];
     }
@@ -200,6 +207,7 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
         alert("Please wait for the route to appear on the map before computing.");
         computeBtn.innerText = "Compute AI Best Route";
         computeBtn.disabled = false;
+        computeBtn.classList.remove('loading');
         return;
     }
     const routeMeta = directions.routes.map((r, i) => ({ id: i, base_time: r.legs[0].duration.value, distance: r.legs[0].distance.value }));
@@ -218,23 +226,17 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
 
         if (data.error) {
             alert("Analysis Error: " + data.error);
-            computeBtn.innerText = "Compute AI Best Route";
-            computeBtn.disabled = false;
-            computeBtn.classList.remove('loading');
-            return;
+            return; // Finally block will reset UI
         }
 
-        // Reveal Panels
         document.getElementById('intelligence-panel').classList.remove('hidden');
         document.getElementById('output-box').classList.remove('hidden');
 
-        // Update Intelligence Metrics
         document.getElementById('f-1h').innerText = data.forecast["t+1h"];
         document.getElementById('f-3h').innerText = data.forecast["t+3h"];
         document.getElementById('f-6h').innerText = data.forecast["t+6h"];
         document.getElementById('out-peak').innerText = `${data.peak_window} (${data.is_peak ? 'BUSY' : 'CALM'})`;
         
-        // Handle Anomalies
         const anomalyAlert = document.getElementById('anomaly-alert');
         if (data.anomaly.is_detected) {
             anomalyAlert.classList.remove('hidden');
@@ -243,29 +245,24 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
             anomalyAlert.classList.add('hidden');
         }
 
-        // Update Chart with real Current prediction vs Future forecast
         updateChart(data.predicted_traffic_volume, data.forecast["t+1h"], data.forecast["t+3h"], data.forecast["t+6h"], simulationMode);
 
-        // Update Route Summary
         document.getElementById('out-from').innerText = directions.routes[0].legs[0].start_address;
         document.getElementById('out-to').innerText = directions.routes[0].legs[0].end_address;
         document.getElementById('out-time').innerText = `${Math.round(data.adjusted_time / 60)} mins (AI Weighted)`;
         document.getElementById('out-status').innerText = `Best Route Highlighed. Level: ${data.congestion_level}`;
 
-        // Change Map Color
         const color = data.congestion_level === 'Critical' ? '#ef4444' : '#10b981';
         directionsRenderer.setOptions({ polylineOptions: { strokeColor: color, fontWeight: 8, strokeOpacity: 1.0 } });
 
     } catch (err) { 
         console.error(err); 
         alert("Server Connectivity Error. Make sure the backend is running.");
-    }
-    finally { 
-        computeBtn.innerText = "Compute AI Best Route"; 
-        computeBtn.disabled = false; 
+    } finally {
+        computeBtn.innerText = "Compute AI Best Route";
+        computeBtn.disabled = false;
         computeBtn.classList.remove('loading');
     }
 });
 
 document.getElementById('reset-map-btn').addEventListener('click', () => location.reload());
-// initMap is managed by Google Maps script callback
