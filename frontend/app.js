@@ -43,6 +43,12 @@ async function initMap() {
     
     // Initialize empty chart
     initChart();
+
+    // Cinematic Intro: Zoom in from Global view to India
+    setTimeout(() => {
+        map.setZoom(5);
+        map.setCenter({ lat: 20.5937, lng: 78.9629 });
+    }, 1000);
 }
 
 /** 1. HYBRID SEARCH ENGINE (Fixes Google Auth/Billing Errors) **/
@@ -117,6 +123,10 @@ function initChart() {
 
 function updateChart(curr, f1, f3, f6, isSim) {
     const data = [curr, f1, f3, f6];
+    // If not simulating, clear the simulation dataset to avoid confusion
+    if (!isSim) {
+        predictionChart.data.datasets[1].data = [0, 0, 0, 0];
+    }
     predictionChart.data.datasets[isSim ? 1 : 0].data = data;
     predictionChart.update();
 }
@@ -181,8 +191,9 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
     if (!csvFile || !startMarker || !destMarker) { alert("Pins & CSV required."); return; }
 
     const computeBtn = document.getElementById('find-route-btn');
-    computeBtn.innerText = "🚥 Intelligence Engine Active...";
+    computeBtn.innerHTML = '<span class="spinner"></span> Analyzing Worldwide Traffic...';
     computeBtn.disabled = true;
+    computeBtn.classList.add('loading');
 
     const directions = directionsRenderer.getDirections();
     if (!directions) {

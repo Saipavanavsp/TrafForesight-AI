@@ -409,3 +409,25 @@ input[type="file"] {
 .hidden {
     display: none !important;
 }
+
+/* Loading States */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.primary-btn.loading {
+    background: #475569 !important;
+    cursor: wait;
+    opacity: 0.8;
+}
