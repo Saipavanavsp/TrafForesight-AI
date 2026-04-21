@@ -34,6 +34,9 @@ async def serve_root_files(filename: str):
         return FileResponse(file_path)
     return {"error": "File not found"}
 
+import pandas as pd
+import io
+
 @app.post("/api/evaluate_routes")
 async def evaluate_routes(
     csv_file: UploadFile = File(...),
@@ -48,8 +51,10 @@ async def evaluate_routes(
     except json.JSONDecodeError:
         return {"error": "Invalid routes_metadata JSON"}
 
+    # Determine simulation modifier (e.g., +30% traffic if active)
+    sim_mod = 1.3 if simulation_mode else 1.0
+
     # Process CSV to derive dynamic baseline for anomaly detection
-    # This makes the system "Live" and tailored to the uploaded dataset
     baseline_volume = 250 # Default
     try:
         content = await csv_file.read()
