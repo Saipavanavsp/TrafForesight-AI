@@ -110,17 +110,19 @@ async def evaluate_routes(
     }
 
 @app.post("/predict")
-def get_prediction(req: TrafficRequest):
+async def get_prediction(req: TrafficRequest):
+    """Standardized Prediction Endpoint for Deployment Reliability."""
     result = predict_traffic(req.day_of_week, req.hour, req.weather, req.speed)
     
     if "error" in result:
         return result
 
     return {
-        "timestamp": "2026-04-14 18:00",
         "predicted_traffic": result["predicted_traffic"],
         "congestion_level": result["congestion_level"],
         "confidence": result["confidence"],
-        "alert_status": result["alert"]
+        "forecast": result["forecast"],
+        "is_peak_hour": result["is_peak"],
+        "alert": result["alert"]
     }
 
