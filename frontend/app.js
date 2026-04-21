@@ -11,22 +11,22 @@ let destMarker;
 let pinMode = 'none';
 let predictionChart;
 
-const startIconUrl = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
-const destIconUrl = 'https://maps.google.com/mapfiles/ms/icons/green-dot.png';
-
 // Authentication Failure Handler
 window.gm_authFailure = function() {
     alert("Google Maps Auth Failed. Check Billing/API Key.");
 };
 
+/**
+ * 1. CINEMATIC GLOBE INITIALIZATION
+ * Features: Automatic Night-Mode detection & Slow transition
+ */
 async function initMap() {
-    // Determine initial theme based on local time
     const hour = new Date().getHours();
     const isNight = hour >= 19 || hour < 6;
 
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 20.5937, lng: 78.9629 }, 
-        zoom: 3, // Start with Globe View
+        zoom: 3, // Cinematic Globe View Start
         mapId: isNight ? "cc66b4478f657a70" : "DEMO_MAP_ID", // Night style if dark
         tilt: 0,
         heading: 0,
@@ -52,14 +52,14 @@ async function initMap() {
     
     initChart();
 
-    // Cinematic Intro: Zoom from Globe to India
+    // Cinematic Intro: Smoothly glide from space to the region
     setTimeout(() => {
         map.panTo({ lat: 20.5937, lng: 78.9629 });
         map.setZoom(5);
     }, 1500);
 }
 
-/** 1. HYBRID SEARCH ENGINE **/
+/** 2. HYBRID SEARCH ENGINE (Nominatim + Google Hybrid) **/
 function setupAutocomplete(inputId) {
     const input = document.getElementById(inputId);
     let suggestionBox = null;
@@ -86,9 +86,9 @@ function setupAutocomplete(inputId) {
             div.innerText = item.display_name;
             div.addEventListener('click', () => {
                 targetInput.value = item.display_name;
-                const latlng = new google.maps.LatLng(item.lat, item.lon);
+                const latlng = new google.maps.LatLng(parseFloat(item.lat), parseFloat(item.lon));
                 setMarker(latlng, targetInput.id === 'start' ? 'start' : 'end');
-                map.setCenter(latlng);
+                map.panTo(latlng);
                 map.setZoom(12);
                 clearSuggestions();
             });
@@ -100,7 +100,7 @@ function setupAutocomplete(inputId) {
     document.addEventListener('click', (e) => { if (suggestionBox && !input.contains(e.target)) clearSuggestions(); });
 }
 
-/** 2. INTELLIGENT CHARTING **/
+/** 3. INTELLIGENT CHARTING **/
 function initChart() {
     const ctx = document.getElementById('prediction-chart').getContext('2d');
     predictionChart = new Chart(ctx, {
@@ -138,7 +138,7 @@ function updateChart(curr, f1, f3, f6, isSim) {
     predictionChart.update();
 }
 
-/** 3. PIINNING & ROUTING **/
+/** 4. PINNING & ROUTING **/
 function setupPinningUI() {
     const dropPinBtn = document.getElementById('drop-pin-btn');
     const pinSubControls = document.getElementById('pin-sub-controls');
@@ -166,12 +166,13 @@ async function handleMapClick(latLng) {
 }
 
 function setMarker(latLng, type) {
+    const icon = type === 'start' ? 'https://maps.google.com/mapfiles/ms/icons/red-dot.png' : 'https://maps.google.com/mapfiles/ms/icons/green-dot.png';
     if (type === 'start') {
         if (startMarker) startMarker.setMap(null);
-        startMarker = new google.maps.Marker({ position: latLng, map: map, draggable: true, icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png' });
+        startMarker = new google.maps.Marker({ position: latLng, map: map, draggable: true, icon: icon, animation: google.maps.Animation.DROP });
     } else {
         if (destMarker) destMarker.setMap(null);
-        destMarker = new google.maps.Marker({ position: latLng, map: map, draggable: true, icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png' });
+        destMarker = new google.maps.Marker({ position: latLng, map: map, draggable: true, icon: icon, animation: google.maps.Animation.DROP });
     }
 }
 
@@ -189,7 +190,7 @@ function calculateStaticRoute() {
     (res, status) => { if (status === "OK") directionsRenderer.setDirections(res); });
 }
 
-/** 4. INTELLIGENCE ENGINE SUBMISSION **/
+/** 5. INTELLIGENCE ENGINE SUBMISSION **/
 document.getElementById('routing-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const csvFile = document.getElementById('csv_upload').files[0];
@@ -205,9 +206,7 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
     const directions = directionsRenderer.getDirections();
     if (!directions) {
         alert("Please wait for the route to appear on the map before computing.");
-        computeBtn.innerText = "Compute AI Best Route";
-        computeBtn.disabled = false;
-        computeBtn.classList.remove('loading');
+        resetButton(computeBtn);
         return;
     }
     const routeMeta = directions.routes.map((r, i) => ({ id: i, base_time: r.legs[0].duration.value, distance: r.legs[0].distance.value }));
@@ -226,7 +225,7 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
 
         if (data.error) {
             alert("Analysis Error: " + data.error);
-            return; // Finally block will reset UI
+            return;
         }
 
         document.getElementById('intelligence-panel').classList.remove('hidden');
@@ -259,10 +258,14 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
         console.error(err); 
         alert("Server Connectivity Error. Make sure the backend is running.");
     } finally {
-        computeBtn.innerText = "Compute AI Best Route";
-        computeBtn.disabled = false;
-        computeBtn.classList.remove('loading');
+        resetButton(computeBtn);
     }
 });
+
+function resetButton(btn) {
+    btn.innerText = "Compute AI Best Route";
+    btn.disabled = false;
+    btn.classList.remove('loading');
+}
 
 document.getElementById('reset-map-btn').addEventListener('click', () => location.reload());
