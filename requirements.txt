@@ -33,3 +33,4 @@ uvicorn
 pydantic
 webbrowser
 python-multipart
+python-dotenv

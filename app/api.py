@@ -9,9 +9,13 @@ import json
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_dir)
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from model.predict import predict_traffic
 
 app = FastAPI(title="Traffic Prediction API")
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "YOUR_API_KEY_HERE")
 
 # Serve frontend files
 frontend_dir = os.path.join(base_dir, "frontend")
@@ -22,6 +26,10 @@ class TrafficRequest(BaseModel):
     hour: int
     weather: int
     speed: float
+
+@app.get("/config")
+async def get_config():
+    return {"google_maps_key": GOOGLE_MAPS_API_KEY}
 
 @app.get("/")
 async def serve_index():
@@ -39,7 +47,7 @@ import io
 
 @app.post("/api/evaluate_routes")
 async def evaluate_routes(
-    csv_file: UploadFile = File(...),
+    csv_file: UploadFile = File(None),
     routes_metadata: str = Form(...),
     vehicle_type: str = Form(...),
     day_of_week: int = Form(...),
@@ -57,12 +65,21 @@ async def evaluate_routes(
     # Process CSV to derive dynamic baseline for anomaly detection
     baseline_volume = 250 # Default
     try:
-        content = await csv_file.read()
-        df_csv = pd.read_csv(io.BytesIO(content))
-        if 'vehicle_count' in df_csv.columns:
+        if csv_file and csv_file.filename:
+            content = await csv_file.read()
+            df_csv = pd.read_csv(io.BytesIO(content))
+        else:
+            # Fallback to local sample data if no file uploaded
+            sample_path = os.path.join(base_dir, "data", "traffic.csv")
+            if os.path.exists(sample_path):
+                df_csv = pd.read_csv(sample_path)
+            else:
+                df_csv = None
+        
+        if df_csv is not None and 'vehicle_count' in df_csv.columns:
             baseline_volume = float(df_csv['vehicle_count'].median())
     except Exception as e:
-        print(f"CSV Parse Warning: {e}")
+        print(f"Data Source Warning: {e}")
 
     # Call the upgraded model with dynamic baseline
     result = predict_traffic(day_of_week, hour, 0, 40.0, simulation_mod=sim_mod, historical_baseline=baseline_volume)

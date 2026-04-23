@@ -11,6 +11,25 @@ let destMarker;
 let pinMode = 'none';
 let predictionChart;
 
+/**
+ * 0. DYNAMIC CONFIGURATION & SCRIPT LOADING
+ */
+(async function loadConfiguration() {
+    try {
+        const resp = await fetch('/config');
+        const config = await resp.json();
+        const key = config.google_maps_key || "YOUR_API_KEY_HERE";
+        
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&v=weekly&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    } catch (err) {
+        console.error("Config load failed:", err);
+    }
+})();
+
 // Authentication Failure Handler
 window.gm_authFailure = function() {
     alert("Google Maps Auth Failed. Check Billing/API Key.");
@@ -196,7 +215,7 @@ document.getElementById('routing-form').addEventListener('submit', async (e) => 
     const csvFile = document.getElementById('csv_upload').files[0];
     const simulationMode = document.getElementById('sim-mode').checked;
     
-    if (!csvFile || !startMarker || !destMarker) { alert("Pins & CSV required."); return; }
+    if (!startMarker || !destMarker) { alert("Please drop Start and Destination pins first."); return; }
 
     const computeBtn = document.getElementById('find-route-btn');
     computeBtn.innerHTML = '<span class="spinner"></span> Analyzing Worldwide Traffic...';
