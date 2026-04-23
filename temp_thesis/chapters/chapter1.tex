@@ -1,0 +1,71 @@
+\chapter{\MakeUppercase{Introduction}}
+\justifying
+\section{Background}
+The gaming industry has experienced an unprecedented rise in the last ten years, and player engagement and retention are beginning to become a crucial factor of success. Traditional video games assign static levels of difficulty---easy, medium, and hard---which fail to fit the individual players' varying levels of ability. A game which is too simple causes boredom, whereas one that is too difficult causes frustration, both of which lead to player disaffection.
+
+Recently, \ac{ai} has been introduced to game design in order to generate more immersive and engaging experiences. One bright spot for \ac{ai} in gaming is \ac{dda}, a technique that involves the modification of game parameters during play to adapt it to the player's performance. \ac{dda} ensures that the gameplay stays challenging but not impossible, keeping an appropriate level of difficulty that sustains the optimal state in which a person is most engaged with the activity, commonly known as the ``flow state.''
+
+\ac{rl}, a branch of \ac{ml}, provides an effective framework for implementing \ac{dda}. In \ac{rl}, an agent learns to choose actions through interacting with an environment and receiving rewards or penalties. \ac{ppo}, a policy gradient method, has emerged as one of the most stable and efficient \ac{rl} algorithms for continuous control problems. By treating the difficulty adjustment problem as an \ac{rl} task, a \ac{ppo}-based agent is able to learn to automatically adjust game parameters such that they are tailored to the skill level of the player.
+
+	
+\subsection{The Psychology of Player Engagement: Flow Theory}
+\paragraph{} To comprehend the motivation behind \ac{dda}, one must examine the psychological framework governing human engagement. The concept of ``Flow,'' articulated by psychologist Mihaly Csikszentmihalyi, provides the theoretical underpinning for adaptive gameplay. Flow is defined as a state of complete immersion, focus, and involvement in an activity, characterized by a deep sense of enjoyment. In the context of video games, achieving this flow state is heavily dependent on a delicate balance between the game's challenge and the player's skill level.
+\paragraph{} When a game's challenges exceed a player's capabilities, the player experiences anxiety and frustration, often leading to sudden abandonment of the game. Conversely, if the player's skills far surpass the challenges presented, the result is boredom and apathy. The ``flow channel'' exists precisely in the narrow margin between these two extremes. From a mathematical perspective, if game difficulty is denoted as $D(t)$ and player skill as $S(t)$ over time $t$, flow is maintained when the absolute difference $|D(t) - S(t)| \le \delta$, where $\delta$ is the threshold of engagement tolerance. The primary objective of any \ac{dda} system is to function as a continuous feedback loop that minimizes this difference by strategically adjusting $D(t)$ in real time. 
+\paragraph{} Modern commercial games often struggle to maintain this critical balance. Static difficulty levels force players to self-evaluate their skill before the game even begins, a task at which human players are notoriously inaccurate. Furthermore, player skill is not static; it evolves through learning and degrades due to cognitive fatigue. A novice player may rapidly acquire mastery over basic mechanics, requiring an immediate escalation in challenge to remain in the flow state. The inability of static difficulty systems to account for the temporal dynamics of skill acquisition underscores the absolute necessity for algorithmic difficulty adjustment.
+
+\subsection{Evolution of Game Artificial Intelligence}
+\paragraph{} The trajectory of \ac{ai} in video games has historically been dominated by deterministic architectures that prioritize predictability and computational efficiency over true adaptability. Early game \ac{ai} relied extensively on Finite State Machines (FSMs), where non-player character (NPC) behavior transitioned rigidly between predefined states (e.g., patrol, chase, attack) triggered by hardcoded boolean conditions. While effective for simple arcade games, FSMs lack the capacity to scale in complexity or respond to novel player strategies.
+\paragraph{} As games evolved, developers adopted Behavior Trees, a hierarchical model that provided greater modularity and nuance compared to FSMs. Behavior Trees allowed for more complex decision-making processes by evaluating a series of conditions branching from a root node down to actionable leaf nodes. Despite their widespread adoption in modern AAA titles, Behavior Trees share a fundamental limitation with FSMs: they are entirely hand-crafted. The intelligence of the system is constrained by the foresight of the developer, meaning the \ac{ai} can neither learn from its mistakes nor adapt to the idiosyncratic playstyles of individual players organically.
+\paragraph{} The recent advent of \ac{ml}, and specifically \ac{rl}, represents a paradigm shift in game \ac{ai} development. Unlike heuristics-based systems, an \ac{rl} agent is not programmed with explicit rules on how to behave. Instead, the agent learns optimal policies by interacting with the environment, receiving state observations, taking actions, and updating its internal weights based on environmental feedback (rewards or penalties). In the context of game difficulty, \ac{rl} flips the traditional game design paradigm: rather than scripting the game engine to perform specific actions, the developer engineers the reward function to incentivize maintaining player engagement. This allows the neural network to discover the most effective parameters for enemy speed, health, and spawn frequency autonomously across thousands of training episodes.
+
+\subsection{Problem Domain}
+\paragraph{} This problem domain is at the crossroads between game design and \ac{ai}. Specifically, this project tackles the issue of keeping player engagement levels high in a space shooter game by adapting difficulty automatically. The game features a spaceship controlled by the player navigating through enemy ships that fight back and asteroids that are instantly fatal upon collision.
+
+\subsection{Existing Solutions and Limitations}
+\paragraph{} Most of today's \ac{dda} systems in commercial games have been developed using heuristics-based rule systems, where predefined thresholds trigger changes in difficulty. Games such as Left 4 Dead use an ``AI Director'' that monitors stress indicators and accordingly adjusts the spawn rates of the enemies. However, these systems are hand-crafted, they cannot adapt to novel player behaviors, and require a large amount of playtesting to tune. \ac{rl}-based approaches provide a data-driven alternative that is able to adapt to various player types without manual rule engineering.
+
+\section{Motivation}
+The motivation for this project stems from several key factors:
+
+\begin{itemize}
+	\item \textbf{Problem Significance:} Players quitting the game because of difficulty levels being unsuitable is a widely known problem in the game industry. A system that adapts to the skill level of the individual player can significantly improve retention.
+	\item \textbf{Practical Motivation:} The space dogfight genre requires real-time responsiveness. Enemies need to adapt their velocity, hit points, and aggressiveness in a dynamic way in order to match the player's ability, which provides the ideal environment for \ac{dda} to be tested out.
+	\item \textbf{Academic Motivation:} The use of \ac{rl} in adjusting game difficulty level is an interesting research problem that links the theory of \ac{rl} with practical game development.
+	\item \textbf{Technical Interest:} The integration of PyTorch-based \ac{ppo} training, Pygame-based real-time inference, FastAPI backend, and React dashboard provides a comprehensive full-stack \ac{ai} engineering challenge.
+	\item \textbf{Innovation Aspect:} This project uses a dynamic learned policy instead of a static rule-based \ac{dda} system, self-adapting based on the monitored player statistics, offering a more personalized gaming experience.
+\end{itemize}
+
+\section{Scope of the project}
+The scope of this project defines the boundaries within which the adaptive gameplay system operates:
+
+\begin{itemize}
+	\item \textbf{Functional Scope:}
+		\begin{itemize}
+			\item A Pygame-based space shooter game with player movement (WASD/Arrow keys) and shooting (Spacebar).
+			\item Enemy ships with variable difficulty parameters (speed, health, spawn delay, attack strength).
+			\item Asteroids that cause instant death on collision.
+			\item A \ac{ppo}-trained \ac{rl} agent that monitors player performance and adjusts difficulty in real time.
+			\item A FastAPI backend to log and serve gameplay analytics.
+			\item A React-based dashboard for real-time performance visualization.
+		\end{itemize}
+	\item \textbf{Non-Functional Scope:}
+		\begin{itemize}
+			\item The game maintains a consistent frame rate at a level appropriate for real-time play.
+			\item The \ac{dda} model performs inference quickly enough that it does not disrupt gameplay.
+			\item The analytics dashboard updates in near real time.
+		\end{itemize}
+	\item \textbf{Technical Scope:}
+		\begin{itemize}
+			\item Python with Pygame for game development.
+			\item PyTorch for \ac{ppo} model training and inference.
+			\item FastAPI for the backend \ac{api}.
+			\item React for the frontend analytics dashboard.
+		\end{itemize}
+	\item \textbf{Project Boundaries:}
+		\begin{itemize}
+			\item The system is designed as a single-player experience; multiplayer support is not included.
+			\item The \ac{dda} system only adjusts predefined game parameters (enemy speed, health, spawn delay, and attack strength).
+			\item The trained model (\texttt{dda\_ppo\_3d.pth}) is specific to the space shooter environment and may require retraining for a different game genre.
+			\item The project assumes the player interacts via keyboard input only.
+		\end{itemize}
+\end{itemize}

@@ -1,0 +1,10 @@
+\begin{center}
+	\Large{\textbf{EXECUTIVE SUMMARY}}	
+\end{center}
+\vspace{1em}
+\normalsize
+\hspace{1cm} This project presents an adaptive gameplay system built using Reinforcement Learning (\ac{rl}) to enable Dynamic Difficulty Adjustment (\ac{dda}) in a real-time space shooter game. The game, developed using Pygame, places the player in control of a spaceship navigating through a hostile environment populated by enemy ships and asteroids. The player can move using WASD or arrow keys and shoot using the spacebar. Enemy ships return fire with variable intensity, while asteroid collisions result in instant death, creating a challenging space dogfight experience.
+
+\hspace{1cm} The core intelligence of the system is powered by Proximal Policy Optimization (\ac{ppo}), a state-of-the-art policy gradient algorithm implemented using PyTorch. The trained model, stored as \texttt{dda\_ppo\_3d.pth}, continuously monitors real-time player performance metrics including accuracy ratio, kill rate, player health, damage rate, and survival time. Based on these observations, the \ac{ai} agent dynamically adjusts game parameters such as enemy speed, enemy health, spawn delay, and attack intensity. When a player performs well, the difficulty escalates; when the player struggles, it eases, ensuring an optimal challenge level that sustains engagement.
+
+\hspace{1cm} The system follows a four-layer architecture comprising a Gameplay Layer (Pygame), a Learning Layer (\ac{ppo} model), a Decision Layer (difficulty adjustment logic), and an Analytics Layer (FastAPI backend with a React dashboard). The analytics dashboard provides real-time visualization of player performance and difficulty trends. This full-stack \ac{ai} system demonstrates how reinforcement learning can be practically applied to create personalized, engaging, and adaptive gaming experiences.
