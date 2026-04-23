@@ -1,11 +1,11 @@
 # TrafForesight-AI: Spatio-Temporal Route Intelligence & Predictive Engine 🚥🌍🚀
 
-**TrafForesight-AI** is a professional-grade, multi-layered traffic predictive framework developed for the **VIT Capstone Project**. It optimizes urban mobility and emergency response using advanced Ensemble Learning and cinematic 3D visualization.
+**TrafForesight-AI** is a professional-grade, multi-layered traffic predictive framework developed for the **VIT Capstone Project**. It optimizes urban mobility and emergency response using advanced Ensemble Learning, Graph-based spatial analysis, and a premium Streamlit intelligence dashboard.
 
 ---
 
 ## 🎯 Project Overview
-The core objective of **TrafForesight-AI** is to bridge the gap between static navigation and dynamic urban reality. By leveraging a **Random Forest Predictive Engine**, the system anticipates congestion before it occurs, providing a 31.1% more resilient routing path compared to traditional heuristics.
+The core objective of **TrafForesight-AI** is to bridge the gap between static navigation and dynamic urban reality. By leveraging a **Random Forest Predictive Engine**, the system anticipates congestion before it occurs, providing a **31.1% more resilient routing path** compared to traditional heuristics.
 
 ---
 
@@ -14,15 +14,16 @@ This project was designed to meet the high expectations of the **Vellore Institu
 - **Novelty:** Implementation of an AI-Weighted Penalty Function for routing.
 - **Robustness:** Includes a full suite of Unit Tests and Anomaly Detection.
 - **Accuracy:** Achieved an **R² score of 0.89** with a **67.6% reduction in MAE** over baseline.
-- **Documentation:** Full technical report available in [/docs/TECHNICAL_REPORT.md](docs/TECHNICAL_REPORT.md).
+- **Documentation:** Professional technical insights and research notebooks included.
 
 ---
 
-## 🎨 Dashboard Architecture & High Fidelity UI
-The frontend is a bespoke **Glassmorphism-styled Dashboard**:
-1.  **3D Globe Engine**: Built using the **Google Maps JavaScript Beta API**, enabling full 3D Earth tilt, rotation, and cinematic globe fly-ins.
-2.  **Simulation Engine**: "What-if" scenarios for **Peak Load (+30% traffic)** allow stress tests on urban infrastructure.
-3.  **Real-Time Analytics**: Seamless integration with **Chart.js** to visualize predicted traffic volumes ($T+1, T+3, T+6$ hours).
+## 🎨 Intelligent Dashboard (Streamlit UI)
+The project now features a **Capstone-Level Streamlit Dashboard** designed for real-time interaction:
+1.  **Enterprise Analytics**: High-fidelity metrics for efficiency gains and system health.
+2.  **Predictive Engine**: Interactive "What-if" simulation for weather, peak hours, and road speed.
+3.  **Spatial Intelligence**: Integrated **Folium Maps** for corridor analysis and routing visualization.
+4.  **Model Transparency**: In-depth analytics including Feature Importance and Model Robustness metrics.
 
 ---
 
@@ -40,34 +41,37 @@ The system automatically identifies volume spikes by comparing predictions again
 
 ---
 
-## 🚀 Deployment & Installation
+## 🚀 Quick Start (Deployment)
 
 ### 1. Local Setup
 1.  **Install Dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
-2.  **Launch the Server**:
+2.  **Launch Streamlit UI**:
     ```bash
-    uvicorn app.api:app --reload
+    streamlit run app.py
     ```
-3.  **Access**: Navigate to `http://127.0.0.1:8000/`.
+3.  **Access**: Navigate to `http://localhost:8501`.
 
-### 2. Cloud Configuration
-Pre-configured for **Render.com** with `render.yaml` and `Procfile`.
+### 2. Cloud Deployment
+This project is optimized for **Streamlit Community Cloud**. 
+- **Main file path**: `app.py`
+- **Python version**: 3.9+
 
 ---
 
 ## 📂 Project Structure
 ```text
 TrafForesight-AI/
-├── app/               # FastAPI Backend & Intelligence Endpoints
-├── data/              # Traffic datasets (CSV)
-├── docs/              # Professional Technical Reports (Capstone)
-├── frontend/          # 3D Dashboards (HTML/CSS/JS)
-├── model/             # ML Pipeline (Preprocess, Train, Eval)
-├── assets/            # Model plots & Architecture diagrams
-└── tests/             # Unit tests for reliability
+├── app.py              # Main Streamlit Intelligence Dashboard (Capstone UI)
+├── app/                # Backend simulation & logic
+├── model/              # ML Pipeline (Preprocess, Train, Predict)
+├── data/               # Traffic datasets and historical logs
+├── research_notebooks/ # Exploratory Data Analysis & Model Training (Jupyter)
+├── frontend/           # Legacy HTML/JS 3D interface (Internal use)
+├── docs/               # Technical documentation
+└── tests/              # Unit tests for reliability
 ```
 
 ---
