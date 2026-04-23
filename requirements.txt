@@ -1,7 +1,6 @@
 osmnx
 networkx
 folium
-folium.plugins
 numpy
 pandas
 matplotlib
